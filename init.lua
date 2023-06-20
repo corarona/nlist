@@ -8,7 +8,7 @@ nlist.selected=sl
 
 local function is_dflist(list)
 	for k,v in pairs(minetest.registered_chatcommands) do
-		if v.list_setting == list and v.params == "del <item> | add <item> | list" then
+		if v._df_list_setting and v._df_list_setting == list then
 			return true
 		end
 	end
