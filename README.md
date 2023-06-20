@@ -1,12 +1,6 @@
 ## nlist
 More convenient tools to edit the dragonfire lists and to store additional custom lists.
 
-For the dragonfire lists the setting name has to be used because of a limitation in dragonfire's list API that does not allow to get the setting name from the chatcommand name:
-
-xray: xray_nodes
-search: node_esp_nodes
-...
-
 ### NlEdMode
 Activating this will show you a hud with the currently selected (.nls) list on the right. Punching a node will add (or remove) the itemstring to/from that list.
 
