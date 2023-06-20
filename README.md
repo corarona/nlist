@@ -6,14 +6,14 @@ Activating this will show you a hud with the currently selected (.nls) list on t
 
 ### Commands
 
-#### .nls <listname>
+#### .nls listname
 Select a list
 
-#### .nla [<item>]
+#### .nla [ item ]
 Add an Item to the currently selected list.
 Without arguments this switches to "add" mode (default).
 
-#### .nlr [<item>]
+#### .nlr [ item ]
 Remove an Item from the currently selected list.
 Without arguments this switches to "remove" mode.
 
@@ -32,7 +32,7 @@ Add the itemstring of the currently pointed at node to the selected list.
 #### .nlrpn
 Remove the itemstring of the currently pointed at node from the selected list.
 
-#### .nlshow <listname>
+#### .nlshow listname
 Show (without selecting) the list suppiled as argument.
 
 #### .nlhide
