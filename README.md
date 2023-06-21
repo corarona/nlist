@@ -4,6 +4,11 @@ More convenient tools to edit the dragonfire lists and to store additional custo
 ### NlEdMode
 Activating this will show you a hud with the currently selected (.nls) list on the right. Punching a node will add (or remove) the itemstring to/from that list.
 
+### Dragonfire listcommand extension
+Running a dragonfire listcommand with the nls argument will push the currently selected list to the dragonfire list of that command:
+
+e.g. .xray nls
+
 ### Commands
 
 #### .nls listname

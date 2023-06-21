@@ -95,6 +95,16 @@ function nlist.rename(oldname, newname)
 	return true
 end
 
+function nlist.copy(oldname, newname)
+	oldname, newname = tostring(oldname), tostring(newname)
+	local list = nlist.get(oldname)
+	if list then
+		nlist.rename(oldname,oldname.."_backup")
+	end
+	if not list or not nlist.set(newname,list) then return end
+	return true
+end
+
 function nlist.random(list)
 	local str=storage:get(list)
 	local tb=str:split(',')
@@ -218,3 +228,17 @@ minetest.register_chatcommand('nlrpn',{
 			if nd then nlist.remove(sl,nd.name) end
 		end
 end})
+
+
+for k,v in pairs(minetest.registered_chatcommands) do
+	if v._list_setting then
+		local oldfunc = v.func
+		minetest.registered_chatcommands[k].func = function(p)
+			if p == "nls" then
+				nlist.copy(nlist.selected,v._list_setting)
+				return
+			end
+			return oldfunc(p)
+		end
+	end
+end
