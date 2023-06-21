@@ -153,32 +153,68 @@ end)
 
 ws.rg('NlEdMode','nList','nlist_edmode', function()nlist.show_list(sl,true) end,function() end,function()nlist.hide() end)
 
-minetest.register_chatcommand('nls',{func=function(list)
-	nlist.select(list)
-end})
-minetest.register_chatcommand('nlshow',{func=function() nlist.show_list(sl) end})
-minetest.register_chatcommand('nlhide',{func=function() nlist.hide() end})
-minetest.register_chatcommand('nla',{func=function(el) nlist.add(sl,el)  end})
-minetest.register_chatcommand('nlr',{func=function(el) nlist.remove(sl,el) end})
-minetest.register_chatcommand('nlc',{func=function(el) nlist.clear(sl) end})
-
-minetest.register_chatcommand('nlawi',{func=function() nlist.add(sl,minetest.localplayer:get_wielded_item():get_name())  end})
-minetest.register_chatcommand('nlrwi',{func=function() nlist.remove(sl,minetest.localplayer:get_wielded_item():get_name())  end})
-
-minetest.register_chatcommand('nlapn',{func=function()
-	local ptd = minetest.get_pointed_thing()
-	if ptd then
-		local nd=minetest.get_node_or_nil(ptd.under)
-		if nd then nlist.add(sl,nd.name) end
+minetest.register_chatcommand('nls',{
+	description = "Select a list",
+	params = "<list>",
+	func=function(list)
+		nlist.select(list)
 	end
-end})
-minetest.register_chatcommand('nlrpn',{func=function()
-	local ptd = minetest.get_pointed_thing()
-	if ptd then
-		local nd=minetest.get_node_or_nil(ptd.under)
-		if nd then nlist.remove(sl,nd.name) end
-	end
-end})
+})
+minetest.register_chatcommand('nlshow',{
+	description = "Show a list without selecting",
+	params = "<list>",
+	func=function() nlist.show_list(sl) end
+})
+minetest.register_chatcommand('nlhide',{
+	description = "Hide the currently shown list",
+	params = "",
+	func=function() nlist.hide() end
+})
+minetest.register_chatcommand('nla',{
+	description = "Add an item to the selected list or switch to 'add' mode if run without parameters",
+	params = "[<item>]",
+	func=function(el) nlist.add(sl,el)  end
+})
+minetest.register_chatcommand('nlr',{
+	description = "Remove an item from the selected list or switch to 'remove' mode if run without parameters",
+	params = "[<item>]",
+	func=function(el) nlist.remove(sl,el) end
+})
+minetest.register_chatcommand('nlc',{
+	description = "Clear the selected list",
+	params = "",
+	func=function(el) nlist.clear(sl) end
+})
 
-minetest.register_chatcommand('nltodf',{func=function(p) todflist(tostring(p)) end})
+minetest.register_chatcommand('nlawi',{
+	description = "Add wielded itemstring to the selected list",
+	params = "",
+	func=function() nlist.add(sl,minetest.localplayer:get_wielded_item():get_name())  end
+})
 
+minetest.register_chatcommand('nlrwi',{
+	description = "Remove wielded itemstring from the selected list",
+	params = "",
+	func=function() nlist.remove(sl,minetest.localplayer:get_wielded_item():get_name())  end
+})
+
+minetest.register_chatcommand('nlapn',{
+	description = "Add pointed node's itemstring to the selected list",
+	params = "",
+	func=function()
+		local ptd = minetest.get_pointed_thing()
+		if ptd then
+			local nd=minetest.get_node_or_nil(ptd.under)
+			if nd then nlist.add(sl,nd.name) end
+		end
+end})
+minetest.register_chatcommand('nlrpn',{
+	description = "Remove pointed node's itemstring from the selected list",
+	params = "",
+	func=function()
+		local ptd = minetest.get_pointed_thing()
+		if ptd then
+			local nd=minetest.get_node_or_nil(ptd.under)
+			if nd then nlist.remove(sl,nd.name) end
+		end
+end})
