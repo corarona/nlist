@@ -6,11 +6,13 @@ local nled_hud
 local edmode_wason=false
 nlist.selected=sl
 
-local function is_dflist(list)
+local function get_dflist(list)
+	local l
 	for k,v in pairs(minetest.registered_chatcommands) do
-		if v._df_list_setting and v._df_list_setting == list then
-			return true
+		if v._list_setting and ( k == list or v._list_setting == list ) then
+			l = v._list_setting
 		end
+		if l then return l end
 	end
 	return false
 end
@@ -36,8 +38,9 @@ end
 
 function nlist.set(list,tb)
 	local str=table.concat(tb,",")
-	if is_dflist(list) then
-		minetest.settings:set(list,str)
+	local df = get_dflist(list)
+	if df then
+		minetest.settings:set(df,str)
 	else
 		storage:set_string(list,str)
 	end
@@ -45,8 +48,9 @@ end
 
 function nlist.get(list)
 	local str
-	if is_dflist(list) then
-		str=minetest.settings:get(list)
+	local df = get_dflist(list)
+	if df then
+		str=minetest.settings:get(df)
 	else
 		str=storage:get_string(list)
 	end
@@ -54,10 +58,21 @@ function nlist.get(list)
 end
 
 function nlist.clear(list)
-	if is_dflist(list) then
-		minetest.settings:set(list,"")
+	local df = get_dflist(list)
+	if df then
+		minetest.settings:set(df,"")
 	else
 		storage:set_string(list,"")
+	end
+end
+
+function nlist.select(list)
+	sl = list
+	nlist.selected = list
+	local df = get_dflist(list)
+	if df then
+		sl = df
+		nlist.selected = df
 	end
 end
 
@@ -97,14 +112,14 @@ function nlist.show_list(list,hlp)
 	local txt=list .. "\n --\n" .. table.concat(nlist.get(list),"\n")
 	local htxt="Nodelist edit mode\n .nla/.nlr to switch\n punch node to ".. act .. "\n.nlc to clear\n"
 	if hlp then txt=htxt .. txt end
-	set_nled_hud(txt)
+	nlist.set_nled_hud(txt)
 end
 
 function nlist.hide()
 	if nled_hud then minetest.localplayer:hud_remove(nled_hud) nled_hud=nil end
 end
 
-function set_nled_hud(ttext)
+function nlist.set_nled_hud(ttext)
 	if not minetest.localplayer then return end
 	if type(ttext) ~= "string" then return end
 
@@ -127,7 +142,6 @@ function set_nled_hud(ttext)
 	return true
 end
 
-
 minetest.register_on_punchnode(function(p, n)
 	if not minetest.settings:get_bool('nlist_edmode') then return end
 	if mode == 1 then
@@ -139,7 +153,9 @@ end)
 
 ws.rg('NlEdMode','nList','nlist_edmode', function()nlist.show_list(sl,true) end,function() end,function()nlist.hide() end)
 
-minetest.register_chatcommand('nls',{func=function(list) sl=list nlist.selected=list end})
+minetest.register_chatcommand('nls',{func=function(list)
+	nlist.select(list)
+end})
 minetest.register_chatcommand('nlshow',{func=function() nlist.show_list(sl) end})
 minetest.register_chatcommand('nlhide',{func=function() nlist.hide() end})
 minetest.register_chatcommand('nla',{func=function(el) nlist.add(sl,el)  end})
