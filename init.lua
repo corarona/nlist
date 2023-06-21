@@ -233,6 +233,8 @@ end})
 for k,v in pairs(minetest.registered_chatcommands) do
 	if v._list_setting then
 		local oldfunc = v.func
+		minetest.registered_chatcommands[k].params = "del <item> | add <item> | list | nls"
+		minetest.registered_chatcommands[k].description = v.description..", nls to import currently selected nlist"
 		minetest.registered_chatcommands[k].func = function(p)
 			if p == "nls" then
 				nlist.copy(nlist.selected,v._list_setting)
