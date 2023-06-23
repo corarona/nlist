@@ -9,8 +9,8 @@ nlist.selected=sl
 local function get_dflist(list)
 	local l
 	for k,v in pairs(minetest.registered_chatcommands) do
-		if v._list_setting and ( k == list or v._list_setting == list ) then
-			l = v._list_setting
+		if v.list_setting and ( k == list or v.list_setting == list ) then
+			l = v.list_setting
 		end
 		if l then return l end
 	end
@@ -98,10 +98,11 @@ end
 function nlist.copy(oldname, newname)
 	oldname, newname = tostring(oldname), tostring(newname)
 	local list = nlist.get(oldname)
-	if list then
-		nlist.rename(oldname,oldname.."_backup")
+	local newlist = nlist.get(newname)
+	if #newlist > 0 then
+		nlist.rename(newname,newname.."_backup")
 	end
-	if not list or not nlist.set(newname,list) then return end
+	if #list < 1 or not nlist.set(newname,list) then return false end
 	return true
 end
 
@@ -231,13 +232,13 @@ end})
 
 
 for k,v in pairs(minetest.registered_chatcommands) do
-	if v._list_setting then
+	if v.list_setting then
 		local oldfunc = v.func
 		minetest.registered_chatcommands[k].params = "del <item> | add <item> | list | nls"
 		minetest.registered_chatcommands[k].description = v.description..", nls to import currently selected nlist"
 		minetest.registered_chatcommands[k].func = function(p)
 			if p == "nls" then
-				nlist.copy(nlist.selected,v._list_setting)
+				nlist.copy(nlist.selected,v.list_setting)
 				return
 			end
 			return oldfunc(p)
